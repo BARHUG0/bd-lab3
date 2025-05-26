@@ -1,0 +1,4 @@
+backend/src/Database/Database.php
+
+# Local ENV
+.env
