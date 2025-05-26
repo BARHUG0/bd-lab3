@@ -1,4 +1,7 @@
+# Backend database config
 backend/src/Database/Database.php
+# Vendor
+backend/vendor
 
 # Local ENV
 .env

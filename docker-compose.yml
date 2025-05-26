@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14
@@ -8,10 +10,11 @@ services:
       POSTGRES_DB:       ${POSTGRES_DB}
       POSTGRES_USER:     ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
       - ./db/ddl:/docker-entrypoint-initdb.d/ddl
-      - ./db/data:/docker-entrypoint-initdb.d/data
     networks:
       - app-network
     healthcheck:
@@ -22,15 +25,14 @@ services:
 
   app:
     build:
-      context: ./backend 
-      dockerfile: Dockerfile 
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: php_app
     ports:
       - "9000:9000"
     env_file:
       - .env
     environment:
-      # Asegúrate de que DB_HOST apunte al servicio db dentro de la red
       DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST:       db
       DB_PORT:       ${DB_PORT}
@@ -41,9 +43,9 @@ services:
       - ./backend/src:/var/www/src
       - ./backend/vendor:/var/www/vendor
     depends_on:
-      db:
-        condition: service_healthy
-    networks: [app-network]
+      - db
+    networks:
+      - app-network
     restart: unless-stopped
 
 networks:
