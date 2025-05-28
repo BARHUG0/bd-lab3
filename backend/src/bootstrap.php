@@ -17,13 +17,14 @@ use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Engines\PhpEngine;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\View\FileViewFinder;
+use Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 // Load environment variables from .env if using vlucas/phpdotenv
 if (file_exists(__DIR__ . '/../.env')) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-    $dotenv->load();
+    $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->safeLoad(); // <-- más seguro, no lanza excepción
 }
 
 // ----------
@@ -33,16 +34,17 @@ $capsule = new Capsule;
 
 // Add database connection using environment variables or custom array
 $capsule->addConnection([
-    'driver'    => $_ENV['DB_CONNECTION'] ?? 'pgsql',
-    'host'      => $_ENV['DB_HOST'] ?? '127.0.0.1',
-    'database'  => $_ENV['DB_DATABASE'] ?? 'forge',
-    'username'  => $_ENV['DB_USERNAME'] ?? 'forge',
-    'password'  => $_ENV['DB_PASSWORD'] ?? '',
+    'driver'    => getenv('DB_CONNECTION') ?: 'pgsql',
+    'host'      => getenv('DB_HOST') ?: '127.0.0.1',
+    'database'  => getenv('DB_DATABASE') ?: 'forge',
+    'username'  => getenv('DB_USERNAME') ?: 'forge',
+    'password'  => getenv('DB_PASSWORD') ?: '',
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => '',
-    'port'      => $_ENV['DB_PORT'] ?? '5432',
+    'port'      => getenv('DB_PORT') ?: '5432',
 ]);
+
 
 // Make this Capsule instance available globally via static methods
 $capsule->setAsGlobal();

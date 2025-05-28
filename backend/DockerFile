@@ -1,5 +1,4 @@
-# backend/Dockerfile
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
 RUN apt-get update \
  && apt-get install -y libpq-dev git unzip zip \
@@ -13,7 +12,9 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
 
 COPY src/ ./src/
-RUN chown -R www-data:www-data /var/www/src
+COPY public/ ./public/
 
-EXPOSE 9000
-CMD ["php-fpm"]
+RUN chown -R www-data:www-data /var/www
+
+EXPOSE 80
+CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
