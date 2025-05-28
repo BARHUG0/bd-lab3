@@ -19,7 +19,6 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
     depends_on:
       - db
     ports:
@@ -32,6 +31,8 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - appnet
+    volumes:
+      - ../.env:/var/www/.env   
 
 volumes:
   db_data:
