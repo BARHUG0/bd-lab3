@@ -1,0 +1,57 @@
+INSERT INTO status (name) VALUES
+  ('active'),
+  ('inactive'),
+  ('pending'),
+  ('suspended'),
+  ('archived'),
+  ('draft'),
+  ('published'),
+  ('completed'),
+  ('cancelled'),
+  ('approved'),
+  ('rejected'),
+  ('in_progress'),      -- 11 chars, OK
+  ('on_hold'),
+  ('locked'),
+  ('unlocked'),
+  ('enabled'),
+  ('disabled'),
+  ('verified'),
+  ('unverified'),
+  ('expired'),
+  ('closed'),
+  ('open'),
+  ('queued'),
+  ('running'),
+  ('failed'),
+  ('successful'),       -- 10 chars, OK
+  ('error'),
+  ('processing'),       -- 10 chars, OK
+  ('scheduled'),
+  ('shipped'),
+  ('delivered'),
+  ('returned'),
+  ('refunded'),
+  ('paid'),
+  ('unpaid'),
+  ('submitted'),
+  ('in_review'),        -- 9 chars, OK
+  ('reviewed'),
+  ('authorized'),       -- 10 chars, OK
+  ('declined'),
+  ('awaiting_approv'),  -- original 'awaiting_approval' is 17 chars, cut to 16
+  ('awaiting_payme'),   -- original 'awaiting_payment' 16 chars, exact cut
+  ('awaiting_shipm'),   -- original 'awaiting_shipment' 17 chars, cut to 16
+  ('fulfilled'),
+  ('backordered'),
+  ('onboarding'),
+  ('trial'),
+  ('trial_expired'),
+  ('escalated'),
+  ('resolved'),
+  ('unresolved'),
+  ('locked_out'),
+  ('maintenance'),
+  ('testing'),
+  ('deployed'),
+  ('retired');

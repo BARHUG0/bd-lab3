@@ -2,54 +2,40 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:14
-    container_name: pg_db
-    env_file:
-      - .env
+    image: postgres:15
+    restart: always
     environment:
-      POSTGRES_DB:       ${POSTGRES_DB}
-      POSTGRES_USER:     ${POSTGRES_USER}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - dbdata:/var/lib/postgresql/data
-      - ./db/ddl:/docker-entrypoint-initdb.d/ddl
+      - db_data:/var/lib/postgresql/data
+      - ./dockerdatabase:/docker-entrypoint-initdb.d
+    ports:
+      - "5434:5432"
     networks:
-      - app-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - appnet
 
-  app:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: php_app
-    ports:
-      - "9000:9000"
-    env_file:
-      - .env
-    environment:
-      DB_CONNECTION: ${DB_CONNECTION}
-      DB_HOST:       db
-      DB_PORT:       ${DB_PORT}
-      DB_DATABASE:   ${DB_DATABASE}
-      DB_USERNAME:   ${DB_USERNAME}
-      DB_PASSWORD:   ${DB_PASSWORD}
-    volumes:
-      - ./backend/src:/var/www/src
-      - ./backend/vendor:/var/www/vendor
     depends_on:
       - db
+    ports:
+      - "8002:80"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     networks:
-      - app-network
-    restart: unless-stopped
-
-networks:
-  app-network:
+      - appnet
 
 volumes:
-  dbdata:
+  db_data:
+
+networks:
+  appnet:
+    driver: bridge
